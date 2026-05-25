@@ -523,8 +523,13 @@ echo %C_CIANO%==================================================================
 echo    CleanMgr - Limpeza de disco automatizada
 echo==============================================================================%C_RESET%
 echo [%date% %time%] [INFO] Executando CleanMgr >> "!LOG_PATH!"
-cleanmgr /verylowdisk /n
-echo %C_VERDE%[OK] Limpeza de disco executada.%C_RESET%
+echo %C_AMARELO%Selecionando categorias de limpeza...%C_RESET%
+PowerShell -Command "Get-ChildItem 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\VolumeCaches' -ErrorAction SilentlyContinue | ForEach-Object { New-ItemProperty -Path $_.PSPath -Name StateFlags0001 -Value 2 -PropertyType DWORD -Force | Out-Null }"
+echo %C_AMARELO%Executando CleanMgr...%C_RESET%
+cleanmgr /sagerun:1 >nul 2>&1
+echo %C_AMARELO%Limpando lixeira...%C_RESET%
+PowerShell -Command "Clear-RecycleBin -Force -ErrorAction SilentlyContinue" >nul 2>&1
+echo %C_VERDE%[OK] CleanMgr executado e lixeira limpa.%C_RESET%
 if "!BATCH_MODE!"=="1" goto :EOF
 echo Pressione qualquer tecla...
 pause >nul
