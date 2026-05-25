@@ -1,0 +1,16 @@
+# Arquivos pessoais / feedback
+Analise usuario.md
+
+# Screenshots / artefatos
+*.png
+*.jpg
+*.jpeg
+
+# Arquivos gerados
+*.html
+*.log
+*.tmp
+
+# Sistema
+Thumbs.db
+Desktop.ini
