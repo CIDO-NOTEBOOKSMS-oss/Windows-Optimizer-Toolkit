@@ -66,12 +66,14 @@ echo     %C_CIANO%[H] Servicos Desnecessarios%C_RESET%
 echo     %C_CIANO%[I] Ferramentas de Diagnostico%C_RESET%
 echo     %C_AMARELO%[J] Ativacao Windows/Office (MAS)%C_RESET%
 echo.
+echo     %C_VERDE%[Z] EXECUTAR A-I COMPLETO (automacao total)%C_RESET%
+echo.
 echo                                                    %C_VERMELHO%[X] SAIR%C_RESET%
 echo %C_CIANO%==============================================================================%C_RESET%
 echo %C_BRANCO%Desenvolvido por Notebooks MS %C_CIANO^|%C_RESET% %C_AMARELO%https://notebooksms.com.br%C_RESET%
 echo.
 
-choice /c ABCDEFGHIJX /n /m "Escolha a opcao desejada (A-J ou X): "
+choice /c ABCDEFGHIJZX /n /m "Escolha a opcao desejada (A-J, Z ou X): "
 set "OPC=%errorlevel%"
 
 if "%OPC%"=="1"  goto CatA_Menu
@@ -84,7 +86,65 @@ if "%OPC%"=="7"  goto CatG_Menu
 if "%OPC%"=="8"  goto CatH_Menu
 if "%OPC%"=="9"  goto CatI_Menu
 if "%OPC%"=="10" goto CatJ_Menu
-if "%OPC%"=="11" goto Sair
+if "%OPC%"=="11" goto ExecutarTudo
+if "%OPC%"=="12" goto Sair
+goto MenuPrincipal
+
+
+:: ============================================================================
+::                   EXECUTAR AUTOMATICO COMPLETO (A-I)
+:: ============================================================================
+:ExecutarTudo
+cls
+echo %C_CIANO%==============================================================================
+echo    EXECUTANDO AUTOMACAO COMPLETA (A ate I)
+echo==============================================================================%C_RESET%
+echo [%date% %time%] [INFO] Iniciando automacao completa >> "!LOG_PATH!"
+echo.
+echo %C_AMARELO%Isso executara todas as categorias A a I em sequencia.%C_RESET%
+echo %C_AMARELO%Pressione qualquer tecla para continuar ou X para cancelar...%C_RESET%
+pause >nul
+set "EXECUTAR_TUDO=1"
+echo.
+echo %C_AMARELO%[CAT A] Instalando programas via WinGet...%C_RESET%
+call :CatA_Todas
+echo %C_AMARELO%[CAT B] Verificacao e reparo do sistema...%C_RESET%
+call :CatB_Todas
+echo %C_AMARELO%[CAT C] Limpeza profunda...%C_RESET%
+call :CatC_Todas
+echo %C_AMARELO%[CAT D] Otimizacao de performance...%C_RESET%
+call :CatD_Todas
+echo %C_AMARELO%[CAT E] Privacidade e telemetria...%C_RESET%
+call :CatE_Todas
+echo %C_AMARELO%[CAT F] Remocao de bloatware...%C_RESET%
+call :CatF_Todas
+echo %C_AMARELO%[CAT G] Otimizacao de rede...%C_RESET%
+call :CatG_Todas
+echo %C_AMARELO%[CAT H] Servicos desnecessarios...%C_RESET%
+call :CatH_Todas
+echo %C_AMARELO%[CAT I] Ferramentas de diagnostico...%C_RESET%
+call :CatI_Todas
+set "EXECUTAR_TUDO="
+echo.
+echo %C_VERDE%==============================================================================
+echo    AUTOMACAO COMPLETA FINALIZADA COM SUCESSO!
+echo==============================================================================%C_RESET%
+echo [%date% %time%] [SUCCESS] Automacao completa concluida >> "!LOG_PATH!"
+echo.
+echo %C_BRANCO%Resumo:%C_RESET%
+echo   %C_VERDE%[A] Instalacao de programas%C_RESET%
+echo   %C_VERDE%[B] Verificacao e reparo%C_RESET%
+echo   %C_VERDE%[C] Limpeza profunda%C_RESET%
+echo   %C_VERDE%[D] Otimizacao de performance%C_RESET%
+echo   %C_VERDE%[E] Privacidade e telemetria%C_RESET%
+echo   %C_VERDE%[F] Remocao de bloatware%C_RESET%
+echo   %C_VERDE%[G] Otimizacao de rede%C_RESET%
+echo   %C_VERDE%[H] Servicos desnecessarios%C_RESET%
+echo   %C_VERDE%[I] Ferramentas de diagnostico%C_RESET%
+echo.
+echo %C_AMARELO%Pode ser necessario reiniciar o computador.%C_RESET%
+echo Pressione qualquer tecla para voltar ao menu...
+pause >nul
 goto MenuPrincipal
 
 
@@ -130,6 +190,7 @@ if "%OPC%"=="10" goto MenuPrincipal
 goto CatA_Menu
 
 :CatA_Todas
+set "BATCH_MODE=1"
 cls
 echo %C_CIANO%==============================================================================
 echo    Instalacao Automatica em Lote
@@ -145,6 +206,8 @@ echo [-] Instalando Java Oracle...
 echo [%date% %time%] [BATCH] Iniciando Java Oracle >> "!LOG_PATH!"
 winget install --id !ID7! -e --accept-package-agreements --accept-source-agreements --silent --override "/s"
 echo.
+set "BATCH_MODE=0"
+if defined EXECUTAR_TUDO goto :EOF
 echo %C_VERDE%Instalacao concluida!%C_RESET%
 echo Pressione qualquer tecla...
 pause >nul
@@ -216,6 +279,7 @@ call :CatB_6
 call :CatB_7
 call :CatB_8
 set "BATCH_MODE=0"
+if defined EXECUTAR_TUDO goto :EOF
 echo.
 echo %C_VERDE%Todas as verificacoes concluidas!%C_RESET%
 echo Pressione qualquer tecla...
@@ -415,6 +479,7 @@ echo %C_AMARELO%[6/8] Lixeira...%C_RESET% & call :CatC_6
 echo %C_AMARELO%[7/8] CleanMgr...%C_RESET% & call :CatC_7
 echo %C_AMARELO%[8/8] Hibernacao...%C_RESET% & call :CatC_8
 set "BATCH_MODE=0"
+if defined EXECUTAR_TUDO goto :EOF
 echo.
 echo %C_VERDE%Limpeza completa finalizada!%C_RESET%
 echo Pressione qualquer tecla...
@@ -600,6 +665,7 @@ echo %C_AMARELO%[6/8] Animacoes...%C_RESET% & call :CatD_6
 echo %C_AMARELO%[7/8] GameDVR...%C_RESET% & call :CatD_7
 echo %C_AMARELO%[8/8] Nagle Algorithm...%C_RESET% & call :CatD_8
 set "BATCH_MODE=0"
+if defined EXECUTAR_TUDO goto :EOF
 echo.
 echo %C_VERDE%Todas as otimizacoes de performance aplicadas!%C_RESET%
 echo Pressione qualquer tecla...
@@ -769,6 +835,7 @@ echo %C_AMARELO%[6/8] Sugestoes...%C_RESET% & call :CatE_6
 echo %C_AMARELO%[7/8] Feedback...%C_RESET% & call :CatE_7
 echo %C_AMARELO%[8/8] Localizacao...%C_RESET% & call :CatE_8
 set "BATCH_MODE=0"
+if defined EXECUTAR_TUDO goto :EOF
 echo.
 echo %C_VERDE%Todas as configuracoes de privacidade aplicadas!%C_RESET%
 echo Pressione qualquer tecla...
@@ -951,6 +1018,7 @@ echo %C_AMARELO%[6/8] Solitaire, People, LinkedIn...%C_RESET% & call :CatF_6
 echo %C_AMARELO%[7/8] TikTok, Instagram, Facebook...%C_RESET% & call :CatF_7
 echo %C_AMARELO%[8/8] Apps Pre-Instaladas...%C_RESET% & call :CatF_8
 set "BATCH_MODE=0"
+if defined EXECUTAR_TUDO goto :EOF
 echo.
 echo %C_VERDE%Remocao de bloatware concluida!%C_RESET%
 echo Pressione qualquer tecla...
@@ -1113,6 +1181,7 @@ call :CatG_6
 call :CatG_7
 call :CatG_8
 set "BATCH_MODE=0"
+if defined EXECUTAR_TUDO goto :EOF
 echo.
 echo %C_VERDE%Otimizacao de rede concluida! Pode ser necessario reiniciar.%C_RESET%
 echo Pressione qualquer tecla...
@@ -1278,6 +1347,7 @@ echo %C_AMARELO%[6/8] TabletInputService...%C_RESET% & call :CatH_6
 echo %C_AMARELO%[7/8] Fax, Phone, Wallet...%C_RESET% & call :CatH_7
 echo %C_AMARELO%[8/8] Windows Search...%C_RESET% & call :CatH_8
 set "BATCH_MODE=0"
+if defined EXECUTAR_TUDO goto :EOF
 echo.
 echo %C_VERDE%Todos os servicos foram desativados!%C_RESET%
 echo Pressione qualquer tecla...
@@ -1459,6 +1529,7 @@ call :CatI_7
 call :CatI_8
 call :CatI_9
 set "BATCH_MODE=0"
+if defined EXECUTAR_TUDO goto :EOF
 echo.
 echo %C_VERDE%Diagnostico completo! Verifique as informacoes acima.%C_RESET%
 echo Pressione qualquer tecla...
