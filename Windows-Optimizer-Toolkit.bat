@@ -97,55 +97,152 @@ goto MenuPrincipal
 :ExecutarTudo
 cls
 echo %C_CIANO%==============================================================================
-echo    EXECUTANDO AUTOMACAO COMPLETA (A ate I)
+echo    EXECUTAR AUTOMACAO (A ate I)
 echo==============================================================================%C_RESET%
-echo [%date% %time%] [INFO] Iniciando automacao completa >> "!LOG_PATH!"
+echo %C_CIANO%==============================================================================%C_RESET%
 echo.
-echo %C_AMARELO%Isso executara todas as categorias A a I em sequencia.%C_RESET%
-echo %C_AMARELO%Pressione qualquer tecla para continuar ou X para cancelar...%C_RESET%
-pause >nul
+echo     %C_VERDE%[A] Instalacao de Programas (WinGet)%C_RESET%
+echo     %C_CIANO%[B] Verificacao e Reparo do Sistema%C_RESET%
+echo     %C_CIANO%[C] Limpeza Profunda%C_RESET%
+echo     %C_CIANO%[D] Otimizacao de Performance%C_RESET%
+echo     %C_CIANO%[E] Privacidade e Telemetria%C_RESET%
+echo     %C_CIANO%[F] Remocao de Bloatware%C_RESET%
+echo     %C_CIANO%[G] Otimizacao de Rede%C_RESET%
+echo     %C_CIANO%[H] Servicos Desnecessarios%C_RESET%
+echo     %C_CIANO%[I] Ferramentas de Diagnostico%C_RESET%
+echo.
+echo %C_CIANO%==============================================================================%C_RESET%
+echo.
+echo   %C_VERDE%[E] Executar TODAS (A-I)%C_RESET%
+echo   %C_AMARELO%[P] Personalizar (escolher quais)%C_RESET%
+echo   %C_VERMELHO%[V] Voltar ao menu%C_RESET%
+echo.
+choice /c EPV /n /m "Escolha: "
+if "%errorlevel%"=="3" goto MenuPrincipal
+if "%errorlevel%"=="2" goto ExecutarTudo_Personalizar
+set "EXECUTAR_TUDO=1"
+echo %C_AMARELO%[CAT A] Instalando programas via WinGet...%C_RESET% & call :CatA_Todas
+echo %C_AMARELO%[CAT B] Verificacao e reparo...%C_RESET% & call :CatB_Todas
+echo %C_AMARELO%[CAT C] Limpeza profunda...%C_RESET% & call :CatC_Todas
+echo %C_AMARELO%[CAT D] Otimizacao de performance...%C_RESET% & call :CatD_Todas
+echo %C_AMARELO%[CAT E] Privacidade e telemetria...%C_RESET% & call :CatE_Todas
+echo %C_AMARELO%[CAT F] Remocao de bloatware...%C_RESET% & call :CatF_Todas
+echo %C_AMARELO%[CAT G] Otimizacao de rede...%C_RESET% & call :CatG_Todas
+echo %C_AMARELO%[CAT H] Servicos desnecessarios...%C_RESET% & call :CatH_Todas
+echo %C_AMARELO%[CAT I] Ferramentas de diagnostico...%C_RESET% & call :CatI_Todas
+set "EXECUTAR_TUDO="
+goto ExecutarTudo_Fim
+
+:ExecutarTudo_Personalizar
+echo.
+set /p "CATS=Digite as letras (ex: ABC, A,C,E, A-C): "
+if "!CATS!"=="" goto ExecutarTudo
+set "CATS=!CATS:,=!"
+set "CATS=!CATS: =!"
+set "CATS=!CATS:;=!"
+set "FINAL="
+set "PREV="
+set "IN_RANGE=0"
+for /l %%i in (0,1,30) do (
+    set "CH=!CATS:~%%i,1!"
+    if not defined CH (
+        if defined PREV if "!IN_RANGE!"=="0" set "FINAL=!FINAL!!PREV!"
+        goto :ExecutarTudo_Parsed
+    )
+    if "!CH!"=="-" (
+        if defined PREV set "IN_RANGE=1"
+    ) else (
+        if "!IN_RANGE!"=="1" (
+            set "END=!CH!"
+            for %%c in (A B C D E F G H I) do (
+                if "%%c" geq "!PREV!" if "%%c" leq "!END!" set "FINAL=!FINAL!%%c"
+            )
+            set "PREV="
+            set "IN_RANGE=0"
+        ) else (
+            if defined PREV set "FINAL=!FINAL!!PREV!"
+            set "PREV=!CH!"
+        )
+    )
+)
+:ExecutarTudo_Parsed
 set "EXECUTAR_TUDO=1"
 echo.
-echo %C_AMARELO%[CAT A] Instalando programas via WinGet...%C_RESET%
-call :CatA_Todas
-echo %C_AMARELO%[CAT B] Verificacao e reparo do sistema...%C_RESET%
-call :CatB_Todas
-echo %C_AMARELO%[CAT C] Limpeza profunda...%C_RESET%
-call :CatC_Todas
-echo %C_AMARELO%[CAT D] Otimizacao de performance...%C_RESET%
-call :CatD_Todas
-echo %C_AMARELO%[CAT E] Privacidade e telemetria...%C_RESET%
-call :CatE_Todas
-echo %C_AMARELO%[CAT F] Remocao de bloatware...%C_RESET%
-call :CatF_Todas
-echo %C_AMARELO%[CAT G] Otimizacao de rede...%C_RESET%
-call :CatG_Todas
-echo %C_AMARELO%[CAT H] Servicos desnecessarios...%C_RESET%
-call :CatH_Todas
-echo %C_AMARELO%[CAT I] Ferramentas de diagnostico...%C_RESET%
-call :CatI_Todas
+for /l %%i in (0,1,30) do (
+    set "CH=!FINAL:~%%i,1!"
+    if not defined CH goto ExecutarTudo_Fim
+    if /i "!CH!"=="A" echo %C_AMARELO%[CAT A] Instalando programas...%C_RESET% & call :CatA_Todas
+    if /i "!CH!"=="B" echo %C_AMARELO%[CAT B] Verificacao e reparo...%C_RESET% & call :CatB_Todas
+    if /i "!CH!"=="C" echo %C_AMARELO%[CAT C] Limpeza profunda...%C_RESET% & call :CatC_Todas
+    if /i "!CH!"=="D" echo %C_AMARELO%[CAT D] Otimizacao de performance...%C_RESET% & call :CatD_Todas
+    if /i "!CH!"=="E" echo %C_AMARELO%[CAT E] Privacidade e telemetria...%C_RESET% & call :CatE_Todas
+    if /i "!CH!"=="F" echo %C_AMARELO%[CAT F] Remocao de bloatware...%C_RESET% & call :CatF_Todas
+    if /i "!CH!"=="G" echo %C_AMARELO%[CAT G] Otimizacao de rede...%C_RESET% & call :CatG_Todas
+    if /i "!CH!"=="H" echo %C_AMARELO%[CAT H] Servicos desnecessarios...%C_RESET% & call :CatH_Todas
+    if /i "!CH!"=="I" echo %C_AMARELO%[CAT I] Ferramentas de diagnostico...%C_RESET% & call :CatI_Todas
+)
 set "EXECUTAR_TUDO="
+
+:ExecutarTudo_Fim
 echo.
 echo %C_VERDE%==============================================================================
-echo    AUTOMACAO COMPLETA FINALIZADA COM SUCESSO!
+echo    AUTOMACAO FINALIZADA!
 echo==============================================================================%C_RESET%
-echo [%date% %time%] [SUCCESS] Automacao completa concluida >> "!LOG_PATH!"
-echo.
-echo %C_BRANCO%Resumo:%C_RESET%
-echo   %C_VERDE%[A] Instalacao de programas%C_RESET%
-echo   %C_VERDE%[B] Verificacao e reparo%C_RESET%
-echo   %C_VERDE%[C] Limpeza profunda%C_RESET%
-echo   %C_VERDE%[D] Otimizacao de performance%C_RESET%
-echo   %C_VERDE%[E] Privacidade e telemetria%C_RESET%
-echo   %C_VERDE%[F] Remocao de bloatware%C_RESET%
-echo   %C_VERDE%[G] Otimizacao de rede%C_RESET%
-echo   %C_VERDE%[H] Servicos desnecessarios%C_RESET%
-echo   %C_VERDE%[I] Ferramentas de diagnostico%C_RESET%
+echo [%date% %time%] [SUCCESS] Automacao concluida >> "!LOG_PATH!"
 echo.
 echo %C_AMARELO%Pode ser necessario reiniciar o computador.%C_RESET%
 echo Pressione qualquer tecla para voltar ao menu...
 pause >nul
 goto MenuPrincipal
+
+
+:: ============================================================================
+::          SUB-ROTINA COMPARTILHADA: EXECUTAR PERSONALIZADO
+:: ============================================================================
+:ExecutarPersonalizado
+:: %~1 = prefixo (ex: CatA_), %~2 = string de entrada, %~3 = numero maximo
+set "PREFIX=%~1"
+set "RANGE=%~2"
+set /a "MAX=%~3" 2>nul
+:: Limpa separadores
+set "RANGE=!RANGE:,=!"
+set "RANGE=!RANGE: =!"
+set "RANGE=!RANGE:;=!"
+set "RANGE=!RANGE:.=!"
+:: Expande intervalos (ex: 1-4 vira 1234)
+set "FINAL="
+set "PREV="
+set "IN_RANGE=0"
+for /l %%i in (0,1,30) do (
+    set "CH=!RANGE:~%%i,1!"
+    if not defined CH (
+        if defined PREV if "!IN_RANGE!"=="0" set "FINAL=!FINAL!!PREV!"
+        goto :ExecPersonalizado_Exec
+    )
+    if "!CH!"=="-" (
+        if defined PREV set "IN_RANGE=1"
+    ) else (
+        if "!IN_RANGE!"=="1" (
+            set "END=!CH!"
+            for /l %%c in (1,1,!MAX!) do (
+                if %%c geq !PREV! if %%c leq !END! set "FINAL=!FINAL!%%c"
+            )
+            set "PREV="
+            set "IN_RANGE=0"
+        ) else (
+            if defined PREV set "FINAL=!FINAL!!PREV!"
+            set "PREV=!CH!"
+        )
+    )
+)
+:ExecPersonalizado_Exec
+for /l %%i in (0,1,30) do (
+    set "N=!FINAL:~%%i,1!"
+    if not defined N goto :EOF
+    set "CALL_LABEL=!PREFIX!!N!"
+    call :%CALL_LABEL%
+)
+goto :EOF
 
 
 :: ============================================================================
@@ -170,11 +267,11 @@ echo     !NAME7!
 echo     8. Instalar uBlock Origin Lite (Chrome e Edge)
 echo.
 echo %C_CIANO%==============================================================================%C_RESET%
-echo                                                %C_AMARELO%[V] Voltar ao Menu%C_RESET%
+echo                                     %C_AMARELO%[P] Personalizar   [V] Voltar ao Menu%C_RESET%
 echo %C_CIANO%==============================================================================%C_RESET%
 echo.
 
-choice /c T12345678V /n /m "Escolha (T, 1-8 ou V): "
+choice /c T12345678PV /n /m "Escolha (T, 1-8, P ou V): "
 set "OPC=%errorlevel%"
 
 if "%OPC%"=="1"  goto CatA_Todas
@@ -186,8 +283,38 @@ if "%OPC%"=="6"  set "IDX=5" & goto RunWinGet
 if "%OPC%"=="7"  set "IDX=6" & goto RunWinGet
 if "%OPC%"=="8"  set "IDX=7" & goto RunWinGet
 if "%OPC%"=="9"  goto CatA_uBlock
-if "%OPC%"=="10" goto MenuPrincipal
+if "%OPC%"=="10" goto CatA_Personalizar
+if "%OPC%"=="11" goto MenuPrincipal
 goto CatA_Menu
+
+:CatA_Personalizar
+echo.
+set /p "OPCOES=Digite os numeros (ex: 1-4, 1,3,6-8): "
+if "!OPCOES!"=="" goto CatA_Menu
+set "BATCH_MODE=1"
+call :ExecutarPersonalizado "CatA_" "!OPCOES!" 8
+set "BATCH_MODE=0"
+echo %C_VERDE%Acoes personalizadas concluidas!%C_RESET%
+echo Pressione qualquer tecla...
+pause >nul
+goto CatA_Menu
+
+:CatA_1
+set "IDX=1" & call :RunWinGet & goto :EOF
+:CatA_2
+set "IDX=2" & call :RunWinGet & goto :EOF
+:CatA_3
+set "IDX=3" & call :RunWinGet & goto :EOF
+:CatA_4
+set "IDX=4" & call :RunWinGet & goto :EOF
+:CatA_5
+set "IDX=5" & call :RunWinGet & goto :EOF
+:CatA_6
+set "IDX=6" & call :RunWinGet & goto :EOF
+:CatA_7
+set "IDX=7" & call :RunWinGet & goto :EOF
+:CatA_8
+call :CatA_uBlock & goto :EOF
 
 :CatA_Todas
 set "BATCH_MODE=1"
@@ -214,7 +341,7 @@ pause >nul
 goto CatA_Menu
 
 :CatA_uBlock
-cls
+if "!BATCH_MODE!"=="0" cls
 echo %C_CIANO%==============================================================================
 echo    Instalando uBlock Origin Lite
 echo==============================================================================%C_RESET%
@@ -222,6 +349,7 @@ echo.
 reg add "HKLM\SOFTWARE\Policies\Google\Chrome\ExtensionInstallForcelist" /v "1" /t REG_SZ /d "ddkjiahejlhfcafbddmgiahcphecmpfh;https://google.com" /f >nul
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Edge\ExtensionInstallForcelist" /v "1" /t REG_SZ /d "ddkjiahejlhfcafbddmgiahcphecmpfh;https://google.com" /f >nul
 echo %C_VERDE%[SUCESSO] uBlock Origin Lite configurado!%C_RESET%
+if "!BATCH_MODE!"=="1" goto :EOF
 echo.
 echo Pressione qualquer tecla...
 pause >nul
@@ -249,11 +377,11 @@ echo     [7] Chkdsk /r (recuperar setores defeituosos)
 echo     [8] Bootrec (reparar inicializacao MBR/BCD)
 echo.
 echo %C_CIANO%==============================================================================%C_RESET%
-echo                                              %C_AMARELO%[V] Voltar ao Menu%C_RESET%
+echo                                     %C_AMARELO%[P] Personalizar   [V] Voltar ao Menu%C_RESET%
 echo %C_CIANO%==============================================================================%C_RESET%
 echo.
 
-choice /c T12345678V /n /m "Escolha (T, 1-8 ou V): "
+choice /c T12345678PV /n /m "Escolha (T, 1-8, P ou V): "
 set "OPC=%errorlevel%"
 
 if "%OPC%"=="1"  goto CatB_Todas
@@ -265,7 +393,20 @@ if "%OPC%"=="6"  goto CatB_5
 if "%OPC%"=="7"  goto CatB_6
 if "%OPC%"=="8"  goto CatB_7
 if "%OPC%"=="9"  goto CatB_8
-if "%OPC%"=="10" goto MenuPrincipal
+if "%OPC%"=="10" goto CatB_Personalizar
+if "%OPC%"=="11" goto MenuPrincipal
+goto CatB_Menu
+
+:CatB_Personalizar
+echo.
+set /p "OPCOES=Digite os numeros (ex: 1-4, 1,3,6-8): "
+if "!OPCOES!"=="" goto CatB_Menu
+set "BATCH_MODE=1"
+call :ExecutarPersonalizado "CatB_" "!OPCOES!" 8
+set "BATCH_MODE=0"
+echo %C_VERDE%Acoes personalizadas concluidas!%C_RESET%
+echo Pressione qualquer tecla...
+pause >nul
 goto CatB_Menu
 
 :CatB_Todas
@@ -449,11 +590,11 @@ echo     [7] CleanMgr - Limpeza de disco automatizada
 echo     [8] Desativar Hibernacao + limpar hiberfil.sys
 echo.
 echo %C_CIANO%==============================================================================%C_RESET%
-echo                                              %C_AMARELO%[V] Voltar ao Menu%C_RESET%
+echo                                     %C_AMARELO%[P] Personalizar   [V] Voltar ao Menu%C_RESET%
 echo %C_CIANO%==============================================================================%C_RESET%
 echo.
 
-choice /c T12345678V /n /m "Escolha (T, 1-8 ou V): "
+choice /c T12345678PV /n /m "Escolha (T, 1-8, P ou V): "
 set "OPC=%errorlevel%"
 
 if "%OPC%"=="1"  goto CatC_Todas
@@ -465,7 +606,20 @@ if "%OPC%"=="6"  goto CatC_5
 if "%OPC%"=="7"  goto CatC_6
 if "%OPC%"=="8"  goto CatC_7
 if "%OPC%"=="9"  goto CatC_8
-if "%OPC%"=="10" goto MenuPrincipal
+if "%OPC%"=="10" goto CatC_Personalizar
+if "%OPC%"=="11" goto MenuPrincipal
+goto CatC_Menu
+
+:CatC_Personalizar
+echo.
+set /p "OPCOES=Digite os numeros (ex: 1-4, 1,3,6-8): "
+if "!OPCOES!"=="" goto CatC_Menu
+set "BATCH_MODE=1"
+call :ExecutarPersonalizado "CatC_" "!OPCOES!" 8
+set "BATCH_MODE=0"
+echo %C_VERDE%Acoes personalizadas concluidas!%C_RESET%
+echo Pressione qualquer tecla...
+pause >nul
 goto CatC_Menu
 
 :CatC_Todas
@@ -635,11 +789,11 @@ echo     [7] Desativar GameDVR / Game Bar
 echo     [8] Desativar Nagle Algorithm (menos latencia)
 echo.
 echo %C_CIANO%==============================================================================%C_RESET%
-echo                                              %C_AMARELO%[V] Voltar ao Menu%C_RESET%
+echo                                     %C_AMARELO%[P] Personalizar   [V] Voltar ao Menu%C_RESET%
 echo %C_CIANO%==============================================================================%C_RESET%
 echo.
 
-choice /c T12345678V /n /m "Escolha (T, 1-8 ou V): "
+choice /c T12345678PV /n /m "Escolha (T, 1-8, P ou V): "
 set "OPC=%errorlevel%"
 
 if "%OPC%"=="1"  goto CatD_Todas
@@ -651,7 +805,20 @@ if "%OPC%"=="6"  goto CatD_5
 if "%OPC%"=="7"  goto CatD_6
 if "%OPC%"=="8"  goto CatD_7
 if "%OPC%"=="9"  goto CatD_8
-if "%OPC%"=="10" goto MenuPrincipal
+if "%OPC%"=="10" goto CatD_Personalizar
+if "%OPC%"=="11" goto MenuPrincipal
+goto CatD_Menu
+
+:CatD_Personalizar
+echo.
+set /p "OPCOES=Digite os numeros (ex: 1-4, 1,3,6-8): "
+if "!OPCOES!"=="" goto CatD_Menu
+set "BATCH_MODE=1"
+call :ExecutarPersonalizado "CatD_" "!OPCOES!" 8
+set "BATCH_MODE=0"
+echo %C_VERDE%Acoes personalizadas concluidas!%C_RESET%
+echo Pressione qualquer tecla...
+pause >nul
 goto CatD_Menu
 
 :CatD_Todas
@@ -805,11 +972,11 @@ echo     [7] Desativar Feedback e Diagnosticos
 echo     [8] Desativar Rastreamento de Localizacao
 echo.
 echo %C_CIANO%==============================================================================%C_RESET%
-echo                                              %C_AMARELO%[V] Voltar ao Menu%C_RESET%
+echo                                     %C_AMARELO%[P] Personalizar   [V] Voltar ao Menu%C_RESET%
 echo %C_CIANO%==============================================================================%C_RESET%
 echo.
 
-choice /c T12345678V /n /m "Escolha (T, 1-8 ou V): "
+choice /c T12345678PV /n /m "Escolha (T, 1-8, P ou V): "
 set "OPC=%errorlevel%"
 
 if "%OPC%"=="1"  goto CatE_Todas
@@ -821,7 +988,20 @@ if "%OPC%"=="6"  goto CatE_5
 if "%OPC%"=="7"  goto CatE_6
 if "%OPC%"=="8"  goto CatE_7
 if "%OPC%"=="9"  goto CatE_8
-if "%OPC%"=="10" goto MenuPrincipal
+if "%OPC%"=="10" goto CatE_Personalizar
+if "%OPC%"=="11" goto MenuPrincipal
+goto CatE_Menu
+
+:CatE_Personalizar
+echo.
+set /p "OPCOES=Digite os numeros (ex: 1-4, 1,3,6-8): "
+if "!OPCOES!"=="" goto CatE_Menu
+set "BATCH_MODE=1"
+call :ExecutarPersonalizado "CatE_" "!OPCOES!" 8
+set "BATCH_MODE=0"
+echo %C_VERDE%Acoes personalizadas concluidas!%C_RESET%
+echo Pressione qualquer tecla...
+pause >nul
 goto CatE_Menu
 
 :CatE_Todas
@@ -988,11 +1168,11 @@ echo     [7] Remover TikTok, Instagram, Facebook (Links)
 echo     [8] Remover Apps PRE-INSTALADAS para todos os usuarios
 echo.
 echo %C_CIANO%==============================================================================%C_RESET%
-echo                                              %C_AMARELO%[V] Voltar ao Menu%C_RESET%
+echo                                     %C_AMARELO%[P] Personalizar   [V] Voltar ao Menu%C_RESET%
 echo %C_CIANO%==============================================================================%C_RESET%
 echo.
 
-choice /c T12345678V /n /m "Escolha (T, 1-8 ou V): "
+choice /c T12345678PV /n /m "Escolha (T, 1-8, P ou V): "
 set "OPC=%errorlevel%"
 
 if "%OPC%"=="1"  goto CatF_Todas
@@ -1004,7 +1184,20 @@ if "%OPC%"=="6"  goto CatF_5
 if "%OPC%"=="7"  goto CatF_6
 if "%OPC%"=="8"  goto CatF_7
 if "%OPC%"=="9"  goto CatF_8
-if "%OPC%"=="10" goto MenuPrincipal
+if "%OPC%"=="10" goto CatF_Personalizar
+if "%OPC%"=="11" goto MenuPrincipal
+goto CatF_Menu
+
+:CatF_Personalizar
+echo.
+set /p "OPCOES=Digite os numeros (ex: 1-4, 1,3,6-8): "
+if "!OPCOES!"=="" goto CatF_Menu
+set "BATCH_MODE=1"
+call :ExecutarPersonalizado "CatF_" "!OPCOES!" 8
+set "BATCH_MODE=0"
+echo %C_VERDE%Acoes personalizadas concluidas!%C_RESET%
+echo Pressione qualquer tecla...
+pause >nul
 goto CatF_Menu
 
 :CatF_Todas
@@ -1151,11 +1344,11 @@ echo     [7] Aumentar MaxUserPort (65534 portas)
 echo     [8] Ativar TCP NoDelay + Reduzir Latencia
 echo.
 echo %C_CIANO%==============================================================================%C_RESET%
-echo                                              %C_AMARELO%[V] Voltar ao Menu%C_RESET%
+echo                                     %C_AMARELO%[P] Personalizar   [V] Voltar ao Menu%C_RESET%
 echo %C_CIANO%==============================================================================%C_RESET%
 echo.
 
-choice /c T12345678V /n /m "Escolha (T, 1-8 ou V): "
+choice /c T12345678PV /n /m "Escolha (T, 1-8, P ou V): "
 set "OPC=%errorlevel%"
 
 if "%OPC%"=="1"  goto CatG_Todas
@@ -1167,7 +1360,20 @@ if "%OPC%"=="6"  goto CatG_5
 if "%OPC%"=="7"  goto CatG_6
 if "%OPC%"=="8"  goto CatG_7
 if "%OPC%"=="9"  goto CatG_8
-if "%OPC%"=="10" goto MenuPrincipal
+if "%OPC%"=="10" goto CatG_Personalizar
+if "%OPC%"=="11" goto MenuPrincipal
+goto CatG_Menu
+
+:CatG_Personalizar
+echo.
+set /p "OPCOES=Digite os numeros (ex: 1-4, 1,3,6-8): "
+if "!OPCOES!"=="" goto CatG_Menu
+set "BATCH_MODE=1"
+call :ExecutarPersonalizado "CatG_" "!OPCOES!" 8
+set "BATCH_MODE=0"
+echo %C_VERDE%Acoes personalizadas concluidas!%C_RESET%
+echo Pressione qualquer tecla...
+pause >nul
 goto CatG_Menu
 
 :CatG_Todas
@@ -1317,11 +1523,11 @@ echo     [7] Fax, Phone, Wallet
 echo     [8] Windows Search (Indexacao)
 echo.
 echo %C_CIANO%==============================================================================%C_RESET%
-echo                                              %C_AMARELO%[V] Voltar ao Menu%C_RESET%
+echo                                     %C_AMARELO%[P] Personalizar   [V] Voltar ao Menu%C_RESET%
 echo %C_CIANO%==============================================================================%C_RESET%
 echo.
 
-choice /c T12345678V /n /m "Escolha (T, 1-8 ou V): "
+choice /c T12345678PV /n /m "Escolha (T, 1-8, P ou V): "
 set "OPC=%errorlevel%"
 
 if "%OPC%"=="1"  goto CatH_Todas
@@ -1333,7 +1539,20 @@ if "%OPC%"=="6"  goto CatH_5
 if "%OPC%"=="7"  goto CatH_6
 if "%OPC%"=="8"  goto CatH_7
 if "%OPC%"=="9"  goto CatH_8
-if "%OPC%"=="10" goto MenuPrincipal
+if "%OPC%"=="10" goto CatH_Personalizar
+if "%OPC%"=="11" goto MenuPrincipal
+goto CatH_Menu
+
+:CatH_Personalizar
+echo.
+set /p "OPCOES=Digite os numeros (ex: 1-4, 1,3,6-8): "
+if "!OPCOES!"=="" goto CatH_Menu
+set "BATCH_MODE=1"
+call :ExecutarPersonalizado "CatH_" "!OPCOES!" 8
+set "BATCH_MODE=0"
+echo %C_VERDE%Acoes personalizadas concluidas!%C_RESET%
+echo Pressione qualquer tecla...
+pause >nul
 goto CatH_Menu
 
 :CatH_Todas
@@ -1497,11 +1716,11 @@ echo     [8] Relatorio Completo (salva em .txt)
 echo     %C_AMARELO%[9] Analisar Tamanho das Pastas do Usuario (Desktop, Docs, etc)%C_RESET%
 echo.
 echo %C_CIANO%==============================================================================%C_RESET%
-echo                                              %C_AMARELO%[V] Voltar ao Menu%C_RESET%
+echo                                     %C_AMARELO%[P] Personalizar   [V] Voltar ao Menu%C_RESET%
 echo %C_CIANO%==============================================================================%C_RESET%
 echo.
 
-choice /c T123456789V /n /m "Escolha (T, 1-9 ou V): "
+choice /c T123456789PV /n /m "Escolha (T, 1-9, P ou V): "
 set "OPC=%errorlevel%"
 
 if "%OPC%"=="1"  goto CatI_Todas
@@ -1514,7 +1733,20 @@ if "%OPC%"=="7"  goto CatI_6
 if "%OPC%"=="8"  goto CatI_7
 if "%OPC%"=="9"  goto CatI_8
 if "%OPC%"=="10" goto CatI_9
-if "%OPC%"=="11" goto MenuPrincipal
+if "%OPC%"=="11" goto CatI_Personalizar
+if "%OPC%"=="12" goto MenuPrincipal
+goto CatI_Menu
+
+:CatI_Personalizar
+echo.
+set /p "OPCOES=Digite os numeros (ex: 1-4, 1,3,6-9): "
+if "!OPCOES!"=="" goto CatI_Menu
+set "BATCH_MODE=1"
+call :ExecutarPersonalizado "CatI_" "!OPCOES!" 9
+set "BATCH_MODE=0"
+echo %C_VERDE%Acoes personalizadas concluidas!%C_RESET%
+echo Pressione qualquer tecla...
+pause >nul
 goto CatI_Menu
 
 :CatI_Todas
@@ -1732,7 +1964,7 @@ goto CatJ_Menu
 ::                         FUNCOES ORIGINAIS (WINGET)
 :: ============================================================================
 :RunWinGet
-cls
+if "!BATCH_MODE!"=="0" cls
 echo %C_CIANO%==============================================================================
 echo    Instalacao via WinGet
 echo==============================================================================%C_RESET%
@@ -1762,6 +1994,7 @@ if "!EC!"=="0" (
     echo [%date% %time%] [ERROR] Falha em !NAME%IDX%!. Retorno: !EC! >> "!LOG_PATH!"
 )
 echo.
+if "!BATCH_MODE!"=="1" goto :EOF
 echo Pressione qualquer tecla para voltar...
 pause >nul
 goto CatA_Menu
