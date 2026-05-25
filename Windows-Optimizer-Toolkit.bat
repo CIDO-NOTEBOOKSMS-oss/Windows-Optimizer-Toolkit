@@ -240,7 +240,7 @@ for /l %%i in (0,1,30) do (
     set "N=!FINAL:~%%i,1!"
     if not defined N goto :EOF
     set "CALL_LABEL=!PREFIX!!N!"
-    call :%CALL_LABEL%
+    call :!CALL_LABEL!
 )
 goto :EOF
 
