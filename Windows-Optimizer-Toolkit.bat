@@ -406,14 +406,14 @@ goto CatC_Menu
 
 :CatC_Todas
 set "BATCH_MODE=1"
-call :CatC_1
-call :CatC_2
-call :CatC_3
-call :CatC_4
-call :CatC_5
-call :CatC_6
-call :CatC_7
-call :CatC_8
+echo %C_AMARELO%[1/8] TEMP Usuario...%C_RESET% & call :CatC_1
+echo %C_AMARELO%[2/8] TEMP Sistema...%C_RESET% & call :CatC_2
+echo %C_AMARELO%[3/8] Prefetch...%C_RESET% & call :CatC_3
+echo %C_AMARELO%[4/8] Cache Atualizacoes...%C_RESET% & call :CatC_4
+echo %C_AMARELO%[5/8] Logs Windows...%C_RESET% & call :CatC_5
+echo %C_AMARELO%[6/8] Lixeira...%C_RESET% & call :CatC_6
+echo %C_AMARELO%[7/8] CleanMgr...%C_RESET% & call :CatC_7
+echo %C_AMARELO%[8/8] Hibernacao...%C_RESET% & call :CatC_8
 set "BATCH_MODE=0"
 echo.
 echo %C_VERDE%Limpeza completa finalizada!%C_RESET%
@@ -422,7 +422,7 @@ pause >nul
 goto CatC_Menu
 
 :CatC_1
-cls
+if "!BATCH_MODE!"=="0" cls
 echo %C_CIANO%==============================================================================
 echo    Limpando TEMP do Usuario
 echo==============================================================================%C_RESET%
@@ -436,7 +436,7 @@ pause >nul
 goto CatC_Menu
 
 :CatC_2
-cls
+if "!BATCH_MODE!"=="0" cls
 echo %C_CIANO%==============================================================================
 echo    Limpando TEMP do Sistema
 echo==============================================================================%C_RESET%
@@ -450,7 +450,7 @@ pause >nul
 goto CatC_Menu
 
 :CatC_3
-cls
+if "!BATCH_MODE!"=="0" cls
 echo %C_CIANO%==============================================================================
 echo    Limpando Prefetch
 echo==============================================================================%C_RESET%
@@ -463,7 +463,7 @@ pause >nul
 goto CatC_Menu
 
 :CatC_4
-cls
+if "!BATCH_MODE!"=="0" cls
 echo %C_CIANO%==============================================================================
 echo    Limpando Cache de Atualizacoes
 echo==============================================================================%C_RESET%
@@ -492,7 +492,7 @@ pause >nul
 goto CatC_Menu
 
 :CatC_5
-cls
+if "!BATCH_MODE!"=="0" cls
 echo %C_CIANO%==============================================================================
 echo    Limpando Logs do Windows (Event Viewer)
 echo==============================================================================%C_RESET%
@@ -505,7 +505,7 @@ pause >nul
 goto CatC_Menu
 
 :CatC_6
-cls
+if "!BATCH_MODE!"=="0" cls
 echo %C_CIANO%==============================================================================
 echo    Limpando Lixeira (Recycle Bin)
 echo==============================================================================%C_RESET%
@@ -518,7 +518,7 @@ pause >nul
 goto CatC_Menu
 
 :CatC_7
-cls
+if "!BATCH_MODE!"=="0" cls
 echo %C_CIANO%==============================================================================
 echo    CleanMgr - Limpeza de disco automatizada
 echo==============================================================================%C_RESET%
@@ -531,7 +531,7 @@ pause >nul
 goto CatC_Menu
 
 :CatC_8
-cls
+if "!BATCH_MODE!"=="0" cls
 echo %C_CIANO%==============================================================================
 echo    Desativar Hibernacao + Limpar hiberfil.sys
 echo==============================================================================%C_RESET%
@@ -937,21 +937,14 @@ goto CatF_Menu
 
 :CatF_Todas
 set "BATCH_MODE=1"
-cls
-echo %C_CIANO%==============================================================================
-echo    Removendo TODOS os Bloatwares (unico comando)
-echo==============================================================================%C_RESET%
-echo [%date% %time%] [INFO] Removendo todos os bloatwares >> "!LOG_PATH!"
-echo.
-echo %C_AMARELO%Removendo, aguarde...%C_RESET%
-PowerShell -Command "& {
-    $patterns = @('xbox','skype','bing','zune','officehub','solitaire','people','linkedin','spotify','tiktok','instagram','facebook','mixedreality','windowscommunicationsapps','king.com','disney','netflix','hulu')
-    foreach ($p in $patterns) {
-        Get-AppxPackage -AllUsers -ErrorAction SilentlyContinue | Where-Object { $_.Name -match $p } | Remove-AppxPackage -ErrorAction SilentlyContinue
-        Get-AppxProvisionedPackage -Online -ErrorAction SilentlyContinue | Where-Object { $_.DisplayName -match $p } | Remove-AppxProvisionedPackage -Online -ErrorAction SilentlyContinue
-    }
-}" >nul 2>&1
-echo %C_VERDE%[OK] Todos os bloatwares removidos.%C_RESET%
+echo %C_AMARELO%[1/8] Xbox Apps...%C_RESET% & call :CatF_1
+echo %C_AMARELO%[2/8] Skype...%C_RESET% & call :CatF_2
+echo %C_AMARELO%[3/8] Bing Apps...%C_RESET% & call :CatF_3
+echo %C_AMARELO%[4/8] Zune Music/Video...%C_RESET% & call :CatF_4
+echo %C_AMARELO%[5/8] Office Hub...%C_RESET% & call :CatF_5
+echo %C_AMARELO%[6/8] Solitaire, People, LinkedIn...%C_RESET% & call :CatF_6
+echo %C_AMARELO%[7/8] TikTok, Instagram, Facebook...%C_RESET% & call :CatF_7
+echo %C_AMARELO%[8/8] Apps Pre-Instaladas...%C_RESET% & call :CatF_8
 set "BATCH_MODE=0"
 echo.
 echo %C_VERDE%Remocao de bloatware concluida!%C_RESET%
@@ -960,7 +953,7 @@ pause >nul
 goto CatF_Menu
 
 :CatF_1
-cls
+if "!BATCH_MODE!"=="0" cls
 echo %C_CIANO%==============================================================================
 echo    Removendo Apps Xbox
 echo==============================================================================%C_RESET%
@@ -973,7 +966,7 @@ pause >nul
 goto CatF_Menu
 
 :CatF_2
-cls
+if "!BATCH_MODE!"=="0" cls
 echo %C_CIANO%==============================================================================
 echo    Removendo Skype
 echo==============================================================================%C_RESET%
@@ -986,7 +979,7 @@ pause >nul
 goto CatF_Menu
 
 :CatF_3
-cls
+if "!BATCH_MODE!"=="0" cls
 echo %C_CIANO%==============================================================================
 echo    Removendo Apps Bing (News, Weather, Sports)
 echo==============================================================================%C_RESET%
@@ -999,7 +992,7 @@ pause >nul
 goto CatF_Menu
 
 :CatF_4
-cls
+if "!BATCH_MODE!"=="0" cls
 echo %C_CIANO%==============================================================================
 echo    Removendo Zune (Music, Video)
 echo==============================================================================%C_RESET%
@@ -1012,7 +1005,7 @@ pause >nul
 goto CatF_Menu
 
 :CatF_5
-cls
+if "!BATCH_MODE!"=="0" cls
 echo %C_CIANO%==============================================================================
 echo    Removendo Office Hub
 echo==============================================================================%C_RESET%
@@ -1025,7 +1018,7 @@ pause >nul
 goto CatF_Menu
 
 :CatF_6
-cls
+if "!BATCH_MODE!"=="0" cls
 echo %C_CIANO%==============================================================================
 echo    Removendo Solitaire, People, LinkedIn
 echo==============================================================================%C_RESET%
@@ -1038,7 +1031,7 @@ pause >nul
 goto CatF_Menu
 
 :CatF_7
-cls
+if "!BATCH_MODE!"=="0" cls
 echo %C_CIANO%==============================================================================
 echo    Removendo TikTok, Instagram, Facebook
 echo==============================================================================%C_RESET%
@@ -1051,7 +1044,7 @@ pause >nul
 goto CatF_Menu
 
 :CatF_8
-cls
+if "!BATCH_MODE!"=="0" cls
 echo %C_CIANO%==============================================================================
 echo    Removendo Apps Pre-Instaladas (Todos os Usuarios)
 echo==============================================================================%C_RESET%
@@ -1597,7 +1590,7 @@ echo Gerando relatorio, aguarde...
     wmic logicaldisk get size,freespace,caption
     echo.
     echo ----- TAMANHO DAS PASTAS DO USUARIO -----
-    PowerShell -Command "$user=$env:USERPROFILE; $pastas=@{}; 'Desktop','Downloads','Documents','Pictures','Videos','Music'|%%{$pastas[$_]='$user\'+$_}; $total=0; foreach($p in $pastas.Keys){$caminho=$pastas[$p]; if(Test-Path $caminho){$tam=(Get-ChildItem $caminho -Recurse -File -ErrorAction SilentlyContinue|Measure-Object Length -Sum).Sum; $gb=[math]::Round($tam/1GB,2); $total+=$tam; Write-Host ('  {0,-10} {1,8:F2} GB'-f($p+':'),$gb)}else{Write-Host ('  {0,-10} {1,8}'-f($p+':'),'---')}}; Write-Host ('  TOTAL GERAL:{0,8:F2} GB'-f[math]::Round($total/1GB,2))"
+    PowerShell -Command "$u=$env:USERPROFILE; $nomes='Desktop','Downloads','Documents','Pictures','Videos','Music'; $total=0; foreach($n in $nomes){$c=$u+'\'+$n; if(Test-Path $c){$t=(Get-ChildItem $c -Recurse -File -ErrorAction SilentlyContinue|Measure-Object Length -Sum).Sum; $gb=[math]::Round($t/1GB,2); $total+=$t; Write-Host ('  {0,-12} {1,8:F2} GB'-f($n+':'),$gb)}else{Write-Host ('  {0,-12} {1,8}'-f($n+':'),'---')}}; Write-Host ('  TOTAL GERAL:{0,8:F2} GB'-f[math]::Round($total/1GB,2))"
     echo.
     echo ----- PROCESSOS TOP 10 MEMORIA -----
     PowerShell -Command "Get-Process | Sort-Object WorkingSet64 -Descending | Select-Object -First 10 Name, @{N='MB';E={[math]::Round($_.WorkingSet64/1MB)}} | Format-Table -AutoSize"
@@ -1621,37 +1614,14 @@ echo    Analisar Tamanho das Pastas do Usuario
 echo==============================================================================%C_RESET%
 echo [%date% %time%] [INFO] Analisando pastas do usuario >> "!LOG_PATH!"
 echo.
-echo %C_AMARELO%Calculando tamanhos, aguarde...%C_RESET%
+echo %C_AMARELO%Calculando...%C_RESET%
 echo.
-PowerShell -Command "& {
-    $user = $env:USERPROFILE
-    $pastas = @{
-        'Desktop'   = '$user\Desktop'
-        'Downloads' = '$user\Downloads'
-        'Documents' = '$user\Documents'
-        'Imagens'   = '$user\Pictures'
-        'Videos'    = '$user\Videos'
-        'Musicas'   = '$user\Music'
-    }
-    $total = 0
-    Write-Host ('='*50)
-    Write-Host '  TAMANHO DAS PASTAS DO USUARIO'
-    Write-Host ('='*50)
-    foreach ($p in $pastas.Keys) {
-        $caminho = $pastas[$p]
-        if (Test-Path $caminho) {
-            $tamanho = (Get-ChildItem $caminho -Recurse -File -ErrorAction SilentlyContinue | Measure-Object Length -Sum).Sum
-            $gb = [math]::Round($tamanho / 1GB, 2)
-            $total += $tamanho
-            Write-Host ('  {0,-10} {1,8:F2} GB' -f ($p + ':'), $gb)
-        } else {
-            Write-Host ('  {0,-10} {1,8} ' -f ($p + ':'), '---')
-        }
-    }
-    Write-Host ('-'*50)
-    Write-Host ('  TOTAL GERAL:{0,8:F2} GB' -f [math]::Round($total / 1GB, 2))
-    Write-Host ('='*50)
-}"
+PowerShell -NoProfile -Command "$t=0; Get-ChildItem $env:USERPROFILE\Desktop -Recurse -File -ErrorAction 0|ForEach-Object{$t+=$_.Length}; Write-Host ('  Desktop: '+[math]::Round($t/1GB,2)+' GB')"
+PowerShell -NoProfile -Command "$t=0; Get-ChildItem $env:USERPROFILE\Downloads -Recurse -File -ErrorAction 0|ForEach-Object{$t+=$_.Length}; Write-Host ('  Downloads: '+[math]::Round($t/1GB,2)+' GB')"
+PowerShell -NoProfile -Command "$t=0; Get-ChildItem $env:USERPROFILE\Documents -Recurse -File -ErrorAction 0|ForEach-Object{$t+=$_.Length}; Write-Host ('  Documentos: '+[math]::Round($t/1GB,2)+' GB')"
+PowerShell -NoProfile -Command "$t=0; Get-ChildItem $env:USERPROFILE\Pictures -Recurse -File -ErrorAction 0|ForEach-Object{$t+=$_.Length}; Write-Host ('  Imagens: '+[math]::Round($t/1GB,2)+' GB')"
+PowerShell -NoProfile -Command "$t=0; Get-ChildItem $env:USERPROFILE\Videos -Recurse -File -ErrorAction 0|ForEach-Object{$t+=$_.Length}; Write-Host ('  Videos: '+[math]::Round($t/1GB,2)+' GB')"
+PowerShell -NoProfile -Command "$t=0; Get-ChildItem $env:USERPROFILE\Music -Recurse -File -ErrorAction 0|ForEach-Object{$t+=$_.Length}; Write-Host ('  Musicas: '+[math]::Round($t/1GB,2)+' GB')"
 echo.
 if "!BATCH_MODE!"=="1" goto :EOF
 echo Pressione qualquer tecla...
